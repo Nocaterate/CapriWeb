@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capri ⚡ Electrical AI Desktop Companion</title>
+  <meta name="description" content="Capri is a pixel-art electrical AI girl who lives on your desktop. Talk to her, let her use your PC and browser, control your music, keep your notes and set reminders." />
+  <link rel="icon" href="assets/icon32.png" />
+  <meta property="og:image" content="assets/icon256.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="flash" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a href="#top" class="brand"><img src="assets/icon32.png" alt="" width="28" height="28" /><span>CAPRI</span></a>
+    <nav>
+      <a href="#meet">Meet her</a>
+      <a href="#powers">Powers</a>
+      <a href="#moves">Moves</a>
+      <a href="#party">High Forever</a>
+      <a href="#setup">Setup</a>
+    </nav>
+    <a class="btn btn-sm" href="https://github.com/Nocaterate/Capri/releases/latest" target="_blank" rel="noopener">Download ⚡</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-copy">
+      <p class="tag"><span class="dot"></span> v1.3.0 // Computer control &amp; road trip with D</p>
+      <h1 class="glitch" data-text="CAPRI">CAPRI</h1>
+      <p class="sub">The electrical AI girl who lives on your desktop.</p>
+      <p class="lede">Talk to her by voice or text. She opens your apps, drives your browser, plays your music, keeps your notes and reminds you of things, with pink lightning crackling off everything she does.</p>
+      <div class="cta">
+        <a class="btn" href="https://github.com/Nocaterate/Capri/releases/latest" target="_blank" rel="noopener">Download for Windows</a>
+        <a class="btn btn-ghost" href="https://github.com/Nocaterate/Capri" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+      <p class="fine">Windows 10/11 · free · only needs a free AI key to talk</p>
+    </div>
+
+    <div class="hero-stage">
+      <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+      <button class="capri-hero" id="capriHero" aria-label="Poke Capri">
+        <span class="sprite sheet" data-anim="idle" style="--s:4"></span>
+      </button>
+      <div class="hover-glow"></div>
+      <div class="speech" id="heroSpeech">poke me ⚡</div>
+    </div>
+
+    <a href="#meet" class="scroll-hint" aria-label="Scroll down"><span></span></a>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>TALK</span><i>⚡</i><span>OPEN APPS</span><i>⚡</i><span>BROWSE</span><i>⚡</i><span>PLAY MUSIC</span><i>⚡</i><span>REMIND ME</span><i>⚡</i><span>TAKE NOTES</span><i>⚡</i><span>HIGH FOREVER</span><i>⚡</i><span>CALL D</span><i>⚡</i>
+      <span>TALK</span><i>⚡</i><span>OPEN APPS</span><i>⚡</i><span>BROWSE</span><i>⚡</i><span>PLAY MUSIC</span><i>⚡</i><span>REMIND ME</span><i>⚡</i><span>TAKE NOTES</span><i>⚡</i><span>HIGH FOREVER</span><i>⚡</i><span>CALL D</span><i>⚡</i>
+    </div>
+  </div>
+
+  <!-- MEET -->
+  <section class="section meet" id="meet">
+    <div class="meet-text reveal">
+      <p class="kicker">// 01 · meet her</p>
+      <h2>Just ask. <em>She'll zap it.</em></h2>
+      <p>Capri is an agent: her AI decides which of her powers to use, so you just talk normally. Press <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> and speak, or <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>T</kbd> to type.</p>
+      <p>Anything that changes something asks you first with a <b>Yes, do it / No / Always allow</b> bubble. No passwords, no card fields, ever.</p>
+    </div>
+    <div class="terminal reveal">
+      <div class="term-bar"><span></span><span></span><span></span><b>CAPRI // LINK</b></div>
+      <div class="term-body" id="term" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- POWERS -->
+  <section class="section" id="powers">
+    <p class="kicker reveal">// 02 · powers</p>
+    <h2 class="reveal">Everything she can do <em>on your PC</em></h2>
+    <div class="grid">
+      <article class="card reveal"><div class="ic">🎙️</div><h3>Voice &amp; text</h3><p>Talk with a hotkey or type to her. She answers out loud in her own digital voice.</p><code>"What apps are open?"</code></article>
+      <article class="card reveal"><div class="ic">🖱️</div><h3>Computer control</h3><p>She reads the window in front, then clicks, types, manages files and runs commands. A pink bolt shows where she clicks.</p><code>"Open Notepad and write a shopping list"</code></article>
+      <article class="card reveal"><div class="ic">🌐</div><h3>Browser link</h3><p>Tabs, reading pages, clicking, forms and videos in Chrome, Edge, Brave, Opera, Vivaldi and Firefox.</p><code>"Summarize this article"</code></article>
+      <article class="card reveal"><div class="ic">🎧</div><h3>Music &amp; Spotify</h3><p>Media keys, volume, and exact songs, queues and shuffle with Spotify connected.</p><code>"Queue Blinding Lights"</code></article>
+      <article class="card reveal"><div class="ic">📝</div><h3>Notes &amp; to-dos</h3><p>A hologram panel she projects beside herself, with timed reminders she says out loud.</p><code>"Remind me at 8 pm to call mom"</code></article>
+      <article class="card reveal"><div class="ic">👀</div><h3>Make her more alive</h3><p>She notices the movie, song or game in front of you and reacts. Never looks at private windows or banking pages.</p><code>"How's the movie, is it good?"</code></article>
+      <article class="card reveal"><div class="ic">💬</div><h3>Discord bot</h3><p>She lives on your server too: chat, slash commands, and voice channels. Only you can control the PC.</p><code>/zap</code></article>
+      <article class="card reveal"><div class="ic">🧠</div><h3>Any brain</h3><p>Groq, Gemini, Claude, OpenRouter, Ollama, or Hermes Agent for long-term memory and Telegram.</p><code>"play Espresso on my PC"</code></article>
+    </div>
+  </section>
+
+  <!-- MOVES -->
+  <section class="section" id="moves">
+    <p class="kicker reveal">// 03 · moves</p>
+    <h2 class="reveal">Hand-pixeled, <em>always electric</em></h2>
+    <p class="section-lede reveal">Every move is drawn pixel by pixel. Hover a card to charge it up.</p>
+    <div class="moves">
+      <figure class="move reveal"><div class="move-stage"><span class="sprite sheet" data-anim="idle" style="--s:2"></span></div><figcaption><b>Levitate</b><span>Floats and bobs over a pulsing pink glow.</span></figcaption></figure>
+      <figure class="move reveal"><div class="move-stage"><span class="sprite sheet" data-anim="walk" style="--s:2"></span></div><figcaption><b>Dash</b><span>Zips across your screen trailing sparks.</span></figcaption></figure>
+      <figure class="move reveal power"><div class="move-stage"><span class="sprite sheet" data-anim="charge" style="--s:2"></span></div><figcaption><b>Power up</b><span>Pink aura, glowing eyes, then a shockwave.</span></figcaption></figure>
+      <figure class="move reveal red"><div class="move-stage"><span class="sprite sheet" data-anim="held" style="--s:2"></span></div><figcaption><b>Red electric form</b><span>Drag her and she turns into raw red energy.</span></figcaption></figure>
+      <figure class="move reveal"><div class="move-stage"><span class="sprite sheet" data-anim="cast" style="--s:2"></span></div><figcaption><b>Cast</b><span>Arcs jump between her hands and hair.</span></figcaption></figure>
+      <figure class="move reveal"><div class="move-stage"><span class="sprite lounge" data-anim="lounge" style="--s:2"></span></div><figcaption><b>Chill</b><span>Lounges mid-air, z z z. Peeks if you come close.</span></figcaption></figure>
+      <figure class="move reveal teleport"><div class="move-stage"><span class="sprite sheet" data-anim="idle" style="--s:2"></span></div><figcaption><b>Teleport</b><span>Shatters into pixels and strikes back in.</span></figcaption></figure>
+      <figure class="move reveal"><div class="move-stage"><span class="sprite d" data-anim="d" style="--s:2"></span></div><figcaption><b>Call D</b><span>Her companion. Click him to poke.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- PARTY -->
+  <section class="section party" id="party">
+    <div class="party-inner reveal">
+      <p class="kicker">// 04 · party mode</p>
+      <h2 class="party-title glitch" data-text="HIGH FOREVER">HIGH FOREVER</h2>
+      <p>Her party mode: she goes wild on the beat, all over the screen. Pinball bounces, lightning drops, a storm-DJ light show and shard confetti.</p>
+      <button class="btn btn-big" id="partyBtn">Start the party ♪</button>
+      <p class="fine">Plays a synth beat on this page. Press <kbd>Esc</kbd> to stop.</p>
+    </div>
+  </section>
+
+  <!-- RIDE -->
+  <section class="section ride-sec" id="ride">
+    <p class="kicker reveal">// 05 · road trip</p>
+    <h2 class="reveal">In Love With Myself <em>(with D)</em></h2>
+    <p class="section-lede reveal">A long, slightly broken red car pulls in along your taskbar. Capri and D fly onto the roof while pink electricity crawls over it.</p>
+    <div class="road reveal" id="road">
+      <div class="skyline"></div>
+      <div class="speedlines"></div>
+      <div class="car-wrap">
+        <span class="sprite car" id="car"></span>
+        <span class="sprite rider" id="rider"></span>
+      </div>
+      <div class="asphalt"><div class="lane"></div></div>
+    </div>
+  </section>
+
+  <!-- SETUP -->
+  <section class="section" id="setup">
+    <p class="kicker reveal">// 06 · setup</p>
+    <h2 class="reveal">Up and zapping <em>in 5 minutes</em></h2>
+    <ol class="steps">
+      <li class="step reveal"><span class="num">01</span><h3>Download</h3><p>Grab <code>Capri-win64.zip</code> from Releases, extract it, and double-click <code>Capri.exe</code>. She arrives with a lightning strike.</p></li>
+      <li class="step reveal"><span class="num">02</span><h3>Give her a brain</h3><p>Make a free key at <a href="https://console.groq.com" target="_blank" rel="noopener">console.groq.com</a>, then right-click Capri → <b>Settings…</b> and paste it in.</p></li>
+      <li class="step reveal"><span class="num">03</span><h3>Talk to her</h3><p>Press <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> and say <i>"Open YouTube and search for lofi music"</i>.</p></li>
+    </ol>
+
+    <div class="controls reveal">
+      <h3>Controls</h3>
+      <dl>
+        <div><dt><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd></dt><dd>Talk by voice</dd></div>
+        <div><dt><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>T</kbd></dt><dd>Type a message (or double-click her)</dd></div>
+        <div><dt><kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>H</kbd></dt><dd>Hide / summon (teleport)</dd></div>
+        <div><dt><kbd>Drag</kbd></dt><dd>Move her, red form and all</dd></div>
+        <div><dt><kbd>Click</kbd></dt><dd>Poke. Too many and she gets annoyed.</dd></div>
+        <div><dt><kbd>Scroll</kbd></dt><dd>Resize her while hovering</dd></div>
+      </dl>
+    </div>
+
+    <div class="privacy reveal">
+      <div class="lock">🔒</div>
+      <div><h3>Your stuff stays on your PC</h3><p>Keys, chat memory, notes and to-dos live only in <code>%APPDATA%\Capri</code>. Nothing leaves except to the AI, voice and music services you set up yourself.</p></div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final">
+    <span class="sprite sheet" data-anim="idle" style="--s:3"></span>
+    <h2>Let her move in.</h2>
+    <a class="btn btn-big" href="https://github.com/Nocaterate/Capri/releases/latest" target="_blank" rel="noopener">Download Capri ⚡</a>
+  </section>
+
+  <footer class="foot">
+    <p>Capri is an original character by <a href="https://github.com/Nocaterate" target="_blank" rel="noopener">Nocaterate</a> · MIT licensed</p>
+    <p class="mono">// pink electricity included</p>
+  </footer>
+
+  <button class="stop-party" id="stopParty" hidden>STOP HIGH FOREVER</button>
+  <script src="script.js"></script>
+</body>
+</html>
