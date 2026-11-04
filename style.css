@@ -335,14 +335,29 @@ body.party-on > section, body.party-on > .nav, body.party-on > .ticker, body.par
 .final .sprite { animation: bob 3s ease-in-out infinite; filter: drop-shadow(0 0 22px rgba(255, 42, 109, .8)); }
 .final h2 { font-family: var(--pixel); font-size: clamp(22px, 4vw, 40px); text-shadow: var(--glow); }
 
-.foot { text-align: center; padding: 30px 20px 50px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
-.foot .mono { font-family: var(--mono); color: var(--pink); margin-top: 6px; font-size: 12px; }
+.foot { text-align: center; padding: 48px clamp(16px, 6vw, 96px) 60px; border-top: 1px solid var(--line); }
+.socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; max-width: 1140px; margin: 0 auto; }
+.socials > .social { flex: 1 1 190px; max-width: 216px; }
+.social {
+  display: flex; align-items: center; gap: 14px; padding: 18px 18px;
+  text-align: left; text-decoration: none; color: var(--text); font: inherit; cursor: pointer;
+  background: rgba(20, 6, 28, .7); border: 1px solid var(--line); border-radius: 14px;
+  transition: transform .2s, border-color .2s, box-shadow .2s, background .2s;
+}
+.social:hover { transform: translateY(-4px); border-color: var(--pink); background: rgba(255, 42, 109, .1); box-shadow: 0 14px 34px -14px rgba(255, 42, 109, .7); }
+.social img, .social svg { width: 26px; height: 26px; flex-shrink: 0; filter: drop-shadow(0 0 6px rgba(255, 42, 109, .6)); }
+.social svg { fill: none; stroke: var(--pink); stroke-width: 1.8; }
+.social span { display: flex; flex-direction: column; min-width: 0; }
+.social b { font-size: 15px; }
+.social i { font-style: normal; font-family: var(--mono); font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.social.copied i { color: var(--mask); }
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 1080px) {
   .grid, .moves { grid-template-columns: repeat(2, 1fr); }
   .controls dl { grid-template-columns: repeat(2, 1fr); }
 }
+@media (max-width: 560px) { .socials > .social { max-width: none; } }
 @media (max-width: 860px) {
   .nav nav { display: none; }
   .hero { grid-template-columns: 1fr; text-align: center; padding-top: 30px; }

@@ -333,6 +333,16 @@
   stopBtn.addEventListener("click", stopParty);
   addEventListener("keydown", e => { if (e.key === "Escape") stopParty(); });
 
+  /* ---------------- SOCIALS ---------------- */
+  // Discord has no public profile link by username, so the block copies it instead
+  document.querySelectorAll("[data-copy]").forEach(btn => btn.addEventListener("click", async () => {
+    const label = btn.querySelector("[data-label]");
+    try { await navigator.clipboard.writeText(btn.dataset.copy); label.textContent = "copied! ⚡"; }
+    catch { label.textContent = btn.dataset.copy; }
+    btn.classList.add("copied"); zapAt(btn);
+    setTimeout(() => { label.textContent = btn.dataset.copy; btn.classList.remove("copied"); }, 1600);
+  }));
+
   /* ---------------- MAIN LOOP ---------------- */
   let last = performance.now(), nextAmbient = last + 1800, carT = 0, riderT = 0, riderBlink = 0;
   function loop(now) {
