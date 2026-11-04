@@ -250,65 +250,52 @@
   /* ---------------- PARTY MODE ---------------- */
   const partyBtn = document.getElementById("partyBtn");
   const stopBtn = document.getElementById("stopParty");
-  let audio = null, partyOn = false, beatTimer = null, beatN = 0;
+  const SONG = "assets/music/High_Forever.mp3";
+  const song = new Audio(SONG);
+  song.loop = true; song.preload = "none"; song.volume = 0.8;
+  let partyOn = false, beats = null, beatsLoading = null, lastBeat = -1;
 
-  function makeAudio() {
-    const ac = new (window.AudioContext || window.webkitAudioContext)();
-    const master = ac.createGain(); master.gain.value = 0.5; master.connect(ac.destination);
-    const noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
-    const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    return { ac, master, noiseBuf };
+  // Find the song's beat once: same analysis the desktop app uses (beats.js from the Capri repo).
+  function loadBeats() {
+    if (beatsLoading) return beatsLoading;
+    beatsLoading = (async () => {
+      const [{ analyseBeats }, data] = await Promise.all([import("./beats.js"), fetch(SONG).then(r => r.arrayBuffer())]);
+      const ac = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, 44100, 44100);
+      const buf = await ac.decodeAudioData(data);
+      beats = analyseBeats(buf.getChannelData(0), buf.numberOfChannels > 1 ? buf.getChannelData(1) : null, buf.sampleRate);
+    })().catch(err => {
+      console.warn("Beat analysis failed, using a steady beat", err);
+      beats = { period: 60 / 128, offset: 0, strength: null };
+    });
+    return beatsLoading;
   }
-  function kick(t) {
-    const { ac, master } = audio;
-    const o = ac.createOscillator(), g = ac.createGain();
-    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(40, t + 0.15);
-    g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-    o.connect(g).connect(master); o.start(t); o.stop(t + 0.4);
-  }
-  function hat(t, open) {
-    const { ac, master, noiseBuf } = audio;
-    const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
-    s.buffer = noiseBuf; f.type = "highpass"; f.frequency.value = 8000;
-    g.gain.setValueAtTime(0.25, t); g.gain.exponentialRampToValueAtTime(0.001, t + (open ? 0.2 : 0.05));
-    s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + 0.25);
-  }
-  function clap(t) {
-    const { ac, master, noiseBuf } = audio;
-    const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
-    s.buffer = noiseBuf; f.type = "bandpass"; f.frequency.value = 1500;
-    g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-    s.connect(f).connect(g).connect(master); s.start(t); s.stop(t + 0.2);
-  }
-  const BASS = [55, 55, 65.4, 55, 73.4, 55, 82.4, 65.4];
-  function bass(t, f) {
-    const { ac, master } = audio;
-    const o = ac.createOscillator(), fl = ac.createBiquadFilter(), g = ac.createGain();
-    o.type = "sawtooth"; o.frequency.value = f;
-    fl.type = "lowpass"; fl.frequency.setValueAtTime(1600, t); fl.frequency.exponentialRampToValueAtTime(200, t + 0.2);
-    g.gain.setValueAtTime(0.22, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-    o.connect(fl).connect(g).connect(master); o.start(t); o.stop(t + 0.25);
-  }
-
-  const BPM = 128, STEP = 60 / BPM / 2; // eighth notes
-  function scheduleStep() {
-    const t = audio.ac.currentTime + 0.05;
-    const n = beatN++;
-    if (n % 2 === 0) { kick(t); onBeat(n); }
-    hat(t, n % 4 === 3);
-    if (n % 4 === 2) clap(t);
-    bass(t + STEP / 2, BASS[(n >> 1) % BASS.length] * (n % 16 >= 12 ? 2 : 1));
-  }
+  partyBtn.addEventListener("pointerenter", loadBeats, { once: true });
 
   const SHARD_COLORS = ["#ff2a6d", "#ffb3d1", "#9b5cff", "#5ee0ff", "#2eff8c", "#fff"];
-  function onBeat(n) {
-    flash();
+  // s = how loud this beat is (0..1): quiet parts stay floaty, the drops go all out
+  function onBeat(n, s) {
     const x = Math.random() * W, y = H * (0.3 + Math.random() * 0.6);
-    strike(x + (Math.random() - 0.5) * 200, -10, x, y, { width: 3, branches: 4, sparkCount: 30, life: 300 });
-    if (n % 8 === 0) {
-      for (let i = 0; i < 26; i++) shard();
+    if (s < 0.3) {
+      strike(x, -10, x + (Math.random() - 0.5) * 200, H * 0.3 * Math.random() + 40, { width: 1.6, branches: 1, sparks: false, life: 260 });
+    } else {
+      strike(x + (Math.random() - 0.5) * 200, -10, x, y, { width: 2 + s * 1.6, branches: 2 + Math.round(s * 3), sparkCount: Math.round(10 + s * 30), life: 300 });
+      if (s > 0.55) flash();
+    }
+    if (s > 0.7 && n % 4 === 0) {
+      for (let i = 0; i < 12 + s * 20; i++) shard();
       strike(0, Math.random() * H, W, Math.random() * H, { width: 3.4, branches: 6, sparks: false });
     }
+    // every Capri and D on screen hops on the beat
+    const hop = 6 + s * 28, dur = (beats ? beats.period : 0.47) * 900;
+    document.querySelectorAll(".sprite.sheet, .sprite.d, .sprite.lounge").forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > H) return;
+      el.animate([
+        { transform: "translateY(0) scale(1)" },
+        { transform: `translateY(${-hop}px) scale(${1 + s * 0.08}) rotate(${(n % 2 ? 1 : -1) * s * 6}deg)`, offset: 0.35 },
+        { transform: "translateY(0) scale(1)" },
+      ], { duration: dur, easing: "ease-out" });
+    });
   }
   function shard() {
     const el = document.createElement("div");
@@ -324,10 +311,10 @@
   function startParty() {
     if (partyOn) return;
     partyOn = true;
-    audio = audio || makeAudio();
-    audio.ac.resume();
-    beatN = 0; scheduleStep();
-    beatTimer = setInterval(scheduleStep, STEP * 1000);
+    lastBeat = -1;
+    song.currentTime = 0;
+    song.play().catch(err => console.warn("Couldn't play High Forever", err));
+    loadBeats();
     document.body.classList.add("party-on");
     stopBtn.hidden = false;
     partyBtn.textContent = "Stop the party ■";
@@ -336,7 +323,7 @@
   function stopParty() {
     if (!partyOn) return;
     partyOn = false;
-    clearInterval(beatTimer);
+    song.pause();
     document.body.classList.remove("party-on");
     stopBtn.hidden = true;
     partyBtn.textContent = "Start the party ♪";
@@ -366,6 +353,16 @@
       pos(car, carFrames[Math.floor(carT) % carFrames.length]);
       if (now > riderBlink && Math.random() < 0.004) riderBlink = now + 160;
       pos(rider, now < riderBlink ? [300, 222] : riderFrames[Math.floor(riderT) % riderFrames.length]);
+    }
+
+    // High Forever: fire on every beat of the song
+    if (partyOn && beats && !song.paused) {
+      const b = Math.floor((song.currentTime - beats.offset) / beats.period);
+      if (b >= 0 && b !== lastBeat) {
+        lastBeat = b;
+        const st = beats.strength;
+        onBeat(b, st ? st[Math.min(b, st.length - 1)] : 0.8);
+      }
     }
 
     // ambient lightning from the sky

@@ -282,9 +282,6 @@ h2 em { font-style: normal; color: var(--pink); text-shadow: 0 0 24px rgba(255, 
 
 body.party-on > section, body.party-on > .nav, body.party-on > .ticker, body.party-on > .foot, body.party-on > #sky { animation: hueShift 4s linear infinite; }
 @keyframes hueShift { to { filter: hue-rotate(360deg); } }
-body.party-on .sprite.sheet, body.party-on .sprite.d, body.party-on .sprite.lounge { animation: partyBounce .47s ease-in-out infinite alternate !important; }
-@keyframes partyBounce { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-26px) scale(1.08) rotate(-4deg); } }
-body.party-on .beat { transform: scale(1.03); }
 .shard { position: fixed; z-index: 45; pointer-events: none; width: 10px; height: 14px; clip-path: polygon(50% 0, 100% 60%, 40% 100%, 0 40%); }
 
 /* ride */
